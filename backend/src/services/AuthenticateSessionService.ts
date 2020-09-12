@@ -12,7 +12,7 @@ interface Request {
 }
 
 interface Response {
-  user: User
+  user: Omit<User, 'password'>
   token: string
 }
 
@@ -32,8 +32,6 @@ class AuthenticateSessionService {
       throw new AppError('Invalid email/password')
     }
 
-    delete user.password
-
     const { secret, expiresIn } = authConfig.jwt
 
     const token = sign({}, secret, {
@@ -41,7 +39,10 @@ class AuthenticateSessionService {
       expiresIn,
     })
 
-    return { user, token }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...responseUser } = user
+
+    return { user: responseUser, token }
   }
 }
 
