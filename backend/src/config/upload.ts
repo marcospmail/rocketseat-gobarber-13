@@ -5,7 +5,8 @@ import crypto from 'crypto'
 const tmpPath = path.resolve(__dirname, '..', '..', 'tmp')
 
 export default {
-  directory: tmpPath,
+  tmp: tmpPath,
+  directory: path.resolve(tmpPath, 'uploads'),
   storage: multer.diskStorage({
     destination: tmpPath,
     filename: (req, file, callback) => {
@@ -13,6 +14,6 @@ export default {
       newFilename += `-${file.originalname}`
 
       return callback(null, newFilename)
-    },
-  }),
+    }
+  })
 }
