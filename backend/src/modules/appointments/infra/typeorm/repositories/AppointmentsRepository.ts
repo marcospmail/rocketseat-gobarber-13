@@ -6,7 +6,6 @@ import IAppointmentsRepository from '@modules/appointments/repositories/IAppoint
 import ICreateAppointmentDTO from '@modules/appointments/dtos/ICreateAppointmentDTO'
 import IFindAllInMonthFromProvider from '@modules/appointments/dtos/IFindAllInMonthFromProvider'
 import IFindAllInDayFromProvider from '@modules/appointments/dtos/IFindAllInDayFromProvider'
-import { addBusinessDays } from 'date-fns'
 
 class AppointmentsRepository implements IAppointmentsRepository {
   ormRepository: Repository<Appointment>
@@ -31,7 +30,8 @@ class AppointmentsRepository implements IAppointmentsRepository {
           fieldname =>
             `to_char(${fieldname}, 'DD-MM-YYYY') = '${parsedDay}-${parsedMonth}-${year}'`
         )
-      }
+      },
+      relations: ['user']
     })
 
     return dayAppointments
