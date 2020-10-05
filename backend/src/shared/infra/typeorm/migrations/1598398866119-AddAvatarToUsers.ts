@@ -8,8 +8,8 @@ export default class AddAvatarToUsers1598398866119
       new TableColumn({
         name: 'avatar',
         type: 'varchar',
-        isNullable: true,
-      }),
+        isNullable: true
+      })
     )
   }
 

@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import multer from 'multer'
+import { celebrate, Segments, Joi } from 'celebrate'
 
 import multerConfig from '@config/upload'
 import ensureAuthenticated from '@modules/users/infra/http/middlewars/ensureAuthenticated'
@@ -12,7 +13,17 @@ const userAvatarController = new UserAvatarController()
 
 const multerInstance = multer(multerConfig)
 
-routes.post('/', userController.create)
+routes.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      name: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
+    }
+  }),
+  userController.create
+)
 
 routes.patch(
   '/avatar',

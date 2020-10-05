@@ -1,6 +1,9 @@
+import { classToClass } from 'class-transformer'
+
 import User from '@modules/users/infra/typeorm/entities/User'
 import AppError from '@shared/errors/AppError'
 import { inject, injectable } from 'tsyringe'
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 import IUsersRepository from '../repositories/IUsersRepository'
 import IHashProvider from '../providers/HashProvider/models/IHashProvider'
 
@@ -17,7 +20,10 @@ class CreateUserService {
     private usersRepository: IUsersRepository,
 
     @inject('HashProvider')
-    private hashProvider: IHashProvider
+    private hashProvider: IHashProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider
   ) {}
 
   public async execute({
@@ -41,10 +47,9 @@ class CreateUserService {
 
     await this.usersRepository.save(newUser)
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...returnNewUser } = newUser
+    await this.cacheProvider.invalidatePrefix('providers-list')
 
-    return returnNewUser
+    return classToClass(newUser)
   }
 }
 

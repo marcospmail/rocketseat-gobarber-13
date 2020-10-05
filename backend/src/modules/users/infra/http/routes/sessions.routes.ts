@@ -1,9 +1,20 @@
 import { Router } from 'express'
+import { celebrate, Segments, Joi } from 'celebrate'
+
 import SessionController from '../controllers/SessionController'
 
 const routes = Router()
 const sessionController = new SessionController()
 
-routes.post('/', sessionController.create)
+routes.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      email: Joi.string().email().required(),
+      password: Joi.string().required()
+    }
+  }),
+  sessionController.create
+)
 
 export default routes

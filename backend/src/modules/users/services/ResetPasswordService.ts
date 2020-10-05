@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError'
+import { addHours, isAfter } from 'date-fns'
 import { inject, injectable } from 'tsyringe'
 import IHashProvider from '../providers/HashProvider/models/IHashProvider'
 import IUsersRepository from '../repositories/IUsersRepository'
@@ -33,6 +34,12 @@ class ResetPasswordService {
 
     if (!user) {
       throw new AppError('User does not exists')
+    }
+
+    const tokenExpireTime = addHours(userToken.created_at, 2)
+
+    if (isAfter(Date.now(), tokenExpireTime)) {
+      throw new AppError('Has passed more than 2 hours, token invalid')
     }
 
     user.password = await this.hashProvider.hash(password)

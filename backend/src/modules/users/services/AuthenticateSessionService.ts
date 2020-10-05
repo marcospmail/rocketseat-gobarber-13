@@ -1,5 +1,6 @@
 import { sign } from 'jsonwebtoken'
 import { injectable, inject } from 'tsyringe'
+import { classToClass } from 'class-transformer'
 
 import User from '@modules/users/infra/typeorm/entities/User'
 import authConfig from '@config/auth'
@@ -50,10 +51,7 @@ class AuthenticateSessionService {
       expiresIn
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...responseUser } = user
-
-    return { user: responseUser, token }
+    return { user: classToClass(user), token }
   }
 }
 

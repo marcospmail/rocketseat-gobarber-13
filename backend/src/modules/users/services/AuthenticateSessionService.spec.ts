@@ -1,3 +1,4 @@
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider'
 import AppError from '@shared/errors/AppError'
 import FakeHashProvider from '../providers/HashProvider/fakes/FakeHashProvider'
 import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository'
@@ -7,20 +8,25 @@ import CreateUserService from './CreateUserService'
 describe('AuthenticateSessionService', () => {
   let fakeUsersRepository: FakeUsersRepository
   let fakeHashProvider: FakeHashProvider
+  let fakeCacheProvider: FakeCacheProvider
 
   let createUserService: CreateUserService
 
   let authenticateSessionService: AuthenticateSessionService
 
-  it('should be able to authenticate', async () => {
+  beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository()
     fakeHashProvider = new FakeHashProvider()
+    fakeCacheProvider = new FakeCacheProvider()
 
     createUserService = new CreateUserService(
       fakeUsersRepository,
-      fakeHashProvider
+      fakeHashProvider,
+      fakeCacheProvider
     )
+  })
 
+  it('should be able to authenticate', async () => {
     authenticateSessionService = new AuthenticateSessionService(
       fakeUsersRepository,
       fakeHashProvider
@@ -65,14 +71,6 @@ describe('AuthenticateSessionService', () => {
   })
 
   it('should not be able to authenticate with wrong password', async () => {
-    fakeUsersRepository = new FakeUsersRepository()
-    fakeHashProvider = new FakeHashProvider()
-
-    createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-
     authenticateSessionService = new AuthenticateSessionService(
       fakeUsersRepository,
       fakeHashProvider

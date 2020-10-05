@@ -38,12 +38,21 @@ class UpdateProfileService {
     user.name = name
     user.email = email
 
-    if (password) {
-      if (!old_password || old_password !== user.password) {
+    if (password && !old_password) {
+      throw new AppError('You need to inform the old password to set a new one')
+    }
+
+    if (password && old_password) {
+      const checkOldPassword = await this.hashProvider.compare(
+        old_password,
+        user.password
+      )
+
+      if (!checkOldPassword) {
         throw new AppError('Invalid old password')
       }
 
-      user.password = password
+      user.password = await this.hashProvider.hash(password)
     }
 
     const updatedUser = await this.usersRepository.save(user)
