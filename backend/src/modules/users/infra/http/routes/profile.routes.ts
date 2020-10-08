@@ -8,18 +8,20 @@ const routes = Router()
 const profileController = new ProfileController()
 
 routes.use(ensureAuthenticated)
-routes.get(
+routes.get('/', profileController.show)
+
+routes.put(
   '/',
   celebrate({
     [Segments.BODY]: {
+      email: Joi.string().email().required(),
       name: Joi.string().required(),
-      password: Joi.string().required(),
-      old_password: Joi.string().required()
+      old_password: Joi.string(),
+      password: Joi.string(),
+      password_confirmation: Joi.string()
     }
   }),
-  profileController.show
+  profileController.update
 )
-
-routes.post('/', profileController.update)
 
 export default routes
