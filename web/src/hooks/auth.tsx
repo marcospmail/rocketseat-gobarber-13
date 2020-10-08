@@ -6,6 +6,7 @@ import { useToast } from './toast'
 interface User {
   id: string
   name: string
+  email: string
   avatar_url: string
 }
 
@@ -23,6 +24,7 @@ interface AuthContextData {
   user: User
   signIn(credentials: SignInCredentials): Promise<void>
   signOut(): void
+  updateUser(user: User): void
 }
 
 const AuthContext = createContext({} as AuthContextData)
@@ -76,6 +78,18 @@ const AuthProvider: React.FC = ({ children }) => {
     [addToast]
   )
 
+  const updateUser = useCallback(
+    (user: User): void => {
+      setData({
+        token: data.token,
+        user,
+      })
+
+      localStorage.setItem('@GoBarber:user', JSON.stringify(user))
+    },
+    [data.token]
+  )
+
   const signOut = () => {
     localStorage.removeItem('@GoBarber:token')
     localStorage.removeItem('@GoBarber:user')
@@ -84,7 +98,9 @@ const AuthProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, signIn, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   )

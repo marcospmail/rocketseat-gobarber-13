@@ -25,6 +25,10 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   const [isFilled, setIsFilled] = useState(false)
 
   useEffect(() => {
+    setIsFilled(!!inputRef.current?.value)
+  }, [])
+
+  useEffect(() => {
     registerField({
       name: fieldName,
       ref: inputRef.current,

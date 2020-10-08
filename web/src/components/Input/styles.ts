@@ -36,11 +36,12 @@ export const Container = styled.div<ContainerProps>`
     flex: 1;
     background: transparent;
     border: 0;
-    color: #666360;
+    color: #fff;
     height: 47px;
   }
 
   > svg {
+    color: #666360;
     margin-right: 8px;
 
     ${({ isFilled }) =>
