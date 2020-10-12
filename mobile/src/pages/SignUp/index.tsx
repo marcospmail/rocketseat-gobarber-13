@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TextInput,
-  Alert,
+  Alert
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import FeatherIcon from 'react-native-vector-icons/Feather'
@@ -26,7 +26,7 @@ import {
   Container,
   Title,
   BackToSignInButton,
-  BackToSignInButtonText,
+  BackToSignInButtonText
 } from './styles'
 import api from '../../services/api'
 
@@ -36,7 +36,7 @@ interface SignUpFormData {
   password: string
 }
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
   const screenHeight = getScreenHeight()
 
   const navigation = useNavigation()
@@ -55,11 +55,11 @@ const SignIn: React.FC = () => {
           email: Yup.string()
             .required('E-mail obrigatório')
             .email('Digite um e-mail válido'),
-          password: Yup.string().min(6, 'No mínimo 6 dígitos'),
+          password: Yup.string().min(6, 'No mínimo 6 dígitos')
         })
 
         await schema.validate(data, {
-          abortEarly: false,
+          abortEarly: false
         })
 
         api.post('users', data)
@@ -72,8 +72,8 @@ const SignIn: React.FC = () => {
               text: 'Ok',
               onPress: () => {
                 navigation.navigate('SignIn')
-              },
-            },
+              }
+            }
           ]
         )
       } catch (err) {
@@ -157,4 +157,4 @@ const SignIn: React.FC = () => {
   )
 }
 
-export default SignIn
+export default SignUp

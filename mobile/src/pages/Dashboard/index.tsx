@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
     }
 
     fetchProviders()
-  }, [])
+  }, [signOut])
 
   const navigateToProfile = useCallback(() => {
     navigate('Profile')
