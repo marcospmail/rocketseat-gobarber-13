@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useCallback,
   useImperativeHandle,
-  forwardRef,
+  forwardRef
 } from 'react'
 import { TextInputProps } from 'react-native'
 import { useField } from '@unform/core'
@@ -14,6 +14,7 @@ import { Container, TextInput, Icon } from './styles'
 interface InputProps extends TextInputProps {
   name: string
   icon: string
+  containerStyle?: Record<string, unknown>
 }
 
 interface InputValueReference {
@@ -24,8 +25,8 @@ interface InputRef {
   focus(): void
 }
 
-const Input: React.RefForwardingComponent<InputRef, InputProps> = (
-  { name, icon, ...rest },
+const Input: React.ForwardRefRenderFunction<InputRef, InputProps> = (
+  { name, icon, containerStyle, ...rest },
   parentRef
 ) => {
   const inputElementRef = useRef<any>(null)
@@ -59,7 +60,7 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   useImperativeHandle(parentRef, () => ({
     focus() {
       inputElementRef.current.focus()
-    },
+    }
   }))
 
   useEffect(() => {
@@ -74,12 +75,16 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
       clearValue() {
         inputValueRef.current.value = ''
         inputElementRef.current.clear()
-      },
+      }
     })
   }, [fieldName, registerField])
 
   return (
-    <Container isFocused={isFocused} isErrored={!!isErrored}>
+    <Container
+      isFocused={isFocused}
+      isErrored={!!isErrored}
+      style={containerStyle}
+    >
       <Icon
         name={icon}
         size={20}

@@ -1,6 +1,7 @@
 import React, {
   useState,
   useCallback,
+  useMemo,
   useEffect,
   useContext,
   createContext
@@ -10,8 +11,15 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 import api from '../services/api'
 
+interface User {
+  id: string
+  name: string
+  email: string
+  avatar_url: string
+}
+
 interface UserState {
-  user: Record<string, unknown>
+  user: User
   token: string
 }
 
@@ -21,16 +29,17 @@ interface SignInCredentials {
 }
 
 interface AuthContextData {
-  user: UserState | null
+  user: User | null
   loading: boolean
   signIn(credentials: SignInCredentials): void
   signOut(): void
+  updateUser(user: User): Promise<void>
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 const AuthProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<UserState | null>(null)
+  const [data, setData] = useState<UserState | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
@@ -48,7 +57,9 @@ const AuthProvider: React.FC = ({ children }) => {
           token: asyncStorageToken,
           user: JSON.parse(asyncStorageUser)
         }
-        setUser(userState)
+        setData(userState)
+
+        api.defaults.headers.authorization = `Bearer ${asyncStorageToken}`
       }
 
       setLoading(false)
@@ -59,21 +70,21 @@ const AuthProvider: React.FC = ({ children }) => {
   const signIn = useCallback(
     async ({ email, password }: SignInCredentials): Promise<void> => {
       try {
-        const { data } = await api.post('/sessions', {
+        const response = await api.post('/sessions', {
           email,
           password
         })
 
-        console.log(data)
-
-        const { user: responseUser, token: responseToken } = data
+        const { user: responseUser, token: responseToken } = response.data
 
         await AsyncStorage.multiSet([
           ['@GoBarber:token', responseToken],
           ['@GoBarber:user', JSON.stringify(responseUser)]
         ])
 
-        setUser({ token: responseToken, user: responseUser })
+        api.defaults.headers.authorization = `Bearer ${responseToken}`
+
+        setData({ token: responseToken, user: responseUser })
       } catch (err) {
         const { status, message } = err.response.data
         Alert.alert(status, message)
@@ -83,12 +94,31 @@ const AuthProvider: React.FC = ({ children }) => {
   )
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove(['@GoBarber:user', '@GoBarber:token'])
-    setUser(null)
+    await AsyncStorage.multiRemove(['@GoBarber:userAuth', '@GoBarber:token'])
+    setData(null)
   }, [])
 
+  const updateUser = useCallback(async (user: User) => {
+    setData(oldData => {
+      return {
+        token: oldData!.token,
+        user
+      }
+    })
+
+    await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user))
+  }, [])
+
+  const userAhhh = useMemo(() => {
+    if (!data) return null
+
+    return data.user
+  }, [data])
+
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, loading }}>
+    <AuthContext.Provider
+      value={{ user: userAhhh, signIn, signOut, updateUser, loading }}
+    >
       {children}
     </AuthContext.Provider>
   )

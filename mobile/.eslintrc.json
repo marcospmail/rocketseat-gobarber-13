@@ -1,6 +1,7 @@
 {
   "env": {
-    "es2020": true
+    "es2020": true,
+    "browser": true
   },
   "globals": {
     "__DEV__": "readonly"
@@ -28,7 +29,8 @@
   ],
   "rules": {
     "prettier/prettier": "error",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "import/no-duplicates": "off"
   },
   "settings": {
     "import/resolver": {
