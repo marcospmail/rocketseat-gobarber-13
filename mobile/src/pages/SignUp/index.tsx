@@ -137,6 +137,7 @@ const SignUp: React.FC = () => {
               ref={passwordRef}
               name="password"
               icon="lock"
+              secureTextEntry
               placeholder="Senha"
               returnKeyType="send"
               onSubmitEditing={() => formRef.current?.submitForm()}

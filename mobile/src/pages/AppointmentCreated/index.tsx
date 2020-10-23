@@ -16,8 +16,6 @@ const AppointmentCreated: React.FC = () => {
 
   const routeParams = params as RouteParams
 
-  console.log(routeParams.date)
-
   const handleOkPressed = useCallback(() => {
     reset({
       routes: [{ name: 'Dashboard' }],

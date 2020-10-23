@@ -3,4 +3,3 @@ const images = {
 }
 
 export { images }
-

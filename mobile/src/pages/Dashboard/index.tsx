@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather'
 
 import api from '../../services/api'
 
-import * as Defaults from '../../utils/defaults'
+import * as defaults from '../../utils/defaults'
 
 import { Provider } from './types'
 
@@ -66,7 +66,9 @@ const Dashboard: React.FC = () => {
         </HeaderTitle>
 
         <ProfileButton onPress={navigateToProfile}>
-          <UserAvatar source={{ uri: user?.avatar_url }} />
+          <UserAvatar
+            source={{ uri: user?.avatar_url ?? defaults.images.avatar_url }}
+          />
         </ProfileButton>
       </Header>
 
@@ -82,7 +84,7 @@ const Dashboard: React.FC = () => {
           >
             <ProviderAvatar
               source={{
-                uri: provider.avatar_url ?? Defaults.images.avatar_url
+                uri: provider.avatar_url ?? defaults.images.avatar_url
               }}
             />
 

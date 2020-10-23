@@ -7,7 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import { format } from 'date-fns'
 
 import api from '../../services/api'
-import * as Defaults from '../../utils/defaults'
+import * as defaults from '../../utils/defaults'
 
 import {
   Container,
@@ -241,7 +241,7 @@ const CreateAppointment: React.FC = () => {
               >
                 <ProviderAvatar
                   source={{
-                    uri: provider.avatar_url ?? Defaults.images.avatar_url
+                    uri: provider.avatar_url ?? defaults.images.avatar_url
                   }}
                 />
                 <ProviderName selected={provider.id === selectedProviderId}>

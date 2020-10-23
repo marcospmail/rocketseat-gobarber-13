@@ -16,7 +16,7 @@ import ImagePicker from 'react-native-image-picker'
 import { useAuth } from '../../contexts/auth'
 
 import api from '../../services/api'
-import * as Defaults from '../../utils/defaults'
+import * as defaults from '../../utils/defaults'
 import getScreenHeight from '../../utils/getScreenHeight'
 import getValidationErrors from '../../utils/getValidationErrors'
 
@@ -29,9 +29,10 @@ import {
   Content,
   Avatar,
   AvatarImage,
-  BackButton
+  BackButton,
+  SignOut,
+  SignOutText
 } from './styles'
-import { RotationGestureHandler } from 'react-native-gesture-handler'
 
 interface SignUpFormData {
   name: string
@@ -42,7 +43,7 @@ interface SignUpFormData {
 }
 
 const Profile: React.FC = () => {
-  const { user, updateUser } = useAuth()
+  const { user, updateUser, signOut } = useAuth()
   const { navigate, goBack } = useNavigation()
 
   const screenHeight = getScreenHeight()
@@ -159,6 +160,10 @@ const Profile: React.FC = () => {
     [navigate, updateUser]
   )
 
+  const handleSignOut = useCallback(() => {
+    signOut()
+  }, [signOut])
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -180,7 +185,7 @@ const Profile: React.FC = () => {
           <Content>
             <Avatar onPress={handleUpdateAvatar}>
               <AvatarImage
-                source={{ uri: user?.avatar_url ?? Defaults.images.avatar_url }}
+                source={{ uri: user?.avatar_url ?? defaults.images.avatar_url }}
               />
             </Avatar>
 
@@ -256,6 +261,10 @@ const Profile: React.FC = () => {
               >
                 Salvar
               </Button>
+
+              <SignOut onPress={handleSignOut}>
+                <SignOutText>Sair</SignOutText>
+              </SignOut>
             </Form>
           </Content>
         </Container>

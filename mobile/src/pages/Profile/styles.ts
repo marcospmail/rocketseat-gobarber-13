@@ -3,7 +3,7 @@ import { getStatusBarHeight } from 'react-native-iphone-x-helper'
 
 export const Container = styled.View`
   flex: 1;
-  margin-top: ${getStatusBarHeight() + 24}px;
+  margin-top: ${getStatusBarHeight()}px;
 `
 
 export const BackButton = styled.TouchableOpacity`
@@ -12,14 +12,14 @@ export const BackButton = styled.TouchableOpacity`
 `
 
 export const Content = styled.View`
-  padding: 10px 30px 0;
+  padding: 0 30px;
 `
 
 export const Title = styled.Text`
   font-size: 24px;
   color: #f4ede8;
   font-family: 'RobotoSlab-Medium';
-  margin: 32px 0 24px;
+  margin: 10px 0 24px;
 `
 
 export const Avatar = styled.TouchableOpacity`
@@ -30,4 +30,15 @@ export const AvatarImage = styled.Image`
   width: 180px;
   height: 180px;
   border-radius: 90px;
+`
+
+export const SignOut = styled.TouchableOpacity`
+  margin: 30px 0;
+`
+
+export const SignOutText = styled.Text`
+  color: #f4ede8;
+  font-size: 16px;
+  font-family: 'RobotoSlab-Regular';
+  text-align: center;
 `
