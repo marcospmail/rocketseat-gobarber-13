@@ -5,6 +5,7 @@ import User from '@modules/users/infra/typeorm/entities/User'
 import AppError from '@shared/errors/AppError'
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider'
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
 
 interface IRequest {
   user_id: string
@@ -18,7 +19,10 @@ class UpdateUserAvatarService {
     private usersRepository: IUsersRepository,
 
     @inject('StorageProvider')
-    private storageProvider: IStorageProvider
+    private storageProvider: IStorageProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider
   ) {}
 
   public async execute({
@@ -39,6 +43,8 @@ class UpdateUserAvatarService {
     user.avatar = filename
 
     await this.usersRepository.save(user)
+
+    await this.cacheProvider.invalidatePrefix('providers-list')
 
     return classToClass(user)
   }
