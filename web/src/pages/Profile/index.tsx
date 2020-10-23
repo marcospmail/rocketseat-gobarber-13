@@ -11,9 +11,11 @@ import Button from '../../components/Button'
 import { useToast } from '../../hooks/toast'
 import { useAuth } from '../../hooks/auth'
 
-import { Container, Content, AvatarInput } from './styles'
 import api from '../../services/api'
 import getValidationErrors from '../../utils/getValidationErrors'
+import * as defaults from '../../utils/defaults'
+
+import { Container, Content, AvatarInput } from './styles'
 
 interface ProfileFormData {
   name: string
@@ -158,7 +160,10 @@ const Profile: React.FC = () => {
           }}
         >
           <AvatarInput>
-            <img src={user.avatar_url} alt={user.name} />
+            <img
+              src={user.avatar_url ?? defaults.images.avatar_url}
+              alt={user.name}
+            />
             <label htmlFor="avatar">
               <FiCamera />
 

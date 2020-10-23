@@ -7,6 +7,8 @@ import ptBr from 'date-fns/locale/pt-BR'
 import 'react-day-picker/lib/style.css'
 
 import { useAuth } from '../../hooks/auth'
+import api from '../../services/api'
+import * as defaults from '../../utils/defaults'
 
 import logoImg from '../../assets/logo.svg'
 
@@ -22,7 +24,6 @@ import {
   Section,
   Appointment,
 } from './styles'
-import api from '../../services/api'
 
 interface MonthAvailabilityItem {
   day: number
@@ -147,7 +148,10 @@ const Dashboard: React.FC = () => {
           <img src={logoImg} alt="GoBarber" />
 
           <Profile>
-            <img src={user.avatar_url} alt={user.name} />
+            <img
+              src={user.avatar_url ?? defaults.images.avatar_url}
+              alt={user.name}
+            />
 
             <div>
               <span>Bem-vindo,</span>
